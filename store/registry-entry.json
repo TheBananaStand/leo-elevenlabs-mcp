@@ -1,0 +1,66 @@
+{
+  "name": "leo-elevenlabs-mcp",
+  "label": "ElevenLabs (MCP)",
+  "description": "Text-to-speech via ElevenLabs, installed at runtime — no rebuild.",
+  "icon": "volume-2",
+  "version": "1.0.0",
+  "author": "TheBananaStand",
+  "homepage": "https://github.com/TheBananaStand/leo-elevenlabs-mcp",
+  "category": "package",
+  "mcp": {
+    "transport": "stdio",
+    "command": "npx",
+    "args": [
+      "-y",
+      "https://github.com/TheBananaStand/leo-elevenlabs-mcp/archive/e856ed69f4c15036fdd454ce94a2ccc82be9491e.tar.gz"
+    ]
+  },
+  "descriptor": {
+    "provides": [
+      "tts"
+    ],
+    "fields": [
+      {
+        "key": "elevenlabs_api_key",
+        "label": "API Key",
+        "field_type": "password",
+        "required": true
+      },
+      {
+        "key": "elevenlabs_voice_id",
+        "label": "Voice ID",
+        "field_type": "text",
+        "required": true
+      },
+      {
+        "key": "elevenlabs_model",
+        "label": "Model",
+        "field_type": "select",
+        "required": false,
+        "options": [
+          "eleven_multilingual_v2",
+          "eleven_turbo_v2_5"
+        ]
+      }
+    ],
+    "entitlements": {
+      "settings_read": [
+        "elevenlabs_api_key",
+        "elevenlabs_voice_id",
+        "elevenlabs_model"
+      ],
+      "network": [
+        "api.elevenlabs.io"
+      ],
+      "sends": [
+        {
+          "to": "api.elevenlabs.io",
+          "classes": [
+            "prompts"
+          ],
+          "purpose": "The text Leo is about to speak aloud. That is whatever you asked it to say or read back, so it can contain anything a spoken reply would."
+        }
+      ]
+    }
+  }
+}
