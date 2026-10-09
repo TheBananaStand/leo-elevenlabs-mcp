@@ -1,6 +1,6 @@
 {
   "name": "leo-elevenlabs-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ElevenLabs text-to-speech as a Leo provider package, over MCP.",
   "type": "module",
   "bin": { "leo-elevenlabs-mcp": "index.js" },

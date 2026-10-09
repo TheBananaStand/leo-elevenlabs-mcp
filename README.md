@@ -13,7 +13,14 @@ The `tts` role in `leo_mcp::providers`:
 ```
 synthesize({ text, voice? }) -> { audio_base64 }
 voices({})                   -> { voices: [{ id, name, detail? }] }
+current_voice({})            -> { voice, setting }
 ```
+
+`voice` on `synthesize` speaks in that voice without changing what is
+configured — an audition, or one person's own choice. `current_voice` answers
+which voice is configured now and which settings key holds it
+(`elevenlabs_voice_id`), so the hub can mark it in a picker and write a new
+choice to the key this server reads, without knowing the key by name.
 
 Results come back as JSON in a text content block, which is the convention the
 hub's bridge reads.

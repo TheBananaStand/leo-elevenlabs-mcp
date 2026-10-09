@@ -3,7 +3,7 @@
   "label": "ElevenLabs (MCP)",
   "description": "Text-to-speech via ElevenLabs, installed at runtime — no rebuild.",
   "icon": "volume-2",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "TheBananaStand",
   "homepage": "https://github.com/TheBananaStand/leo-elevenlabs-mcp",
   "category": "package",
@@ -12,7 +12,7 @@
     "command": "npx",
     "args": [
       "-y",
-      "https://github.com/TheBananaStand/leo-elevenlabs-mcp/archive/e856ed69f4c15036fdd454ce94a2ccc82be9491e.tar.gz"
+      "https://github.com/TheBananaStand/leo-elevenlabs-mcp/archive/12e7481b63e2b1ffad61bb75be1d63ff8039594a.tar.gz"
     ]
   },
   "descriptor": {

@@ -8,8 +8,14 @@
 //
 // The contract it answers is `tts` in leo_mcp::providers:
 //
-//   synthesize({ text })  -> { audio_base64 }
-//   voices({})            -> { voices: [{ id, name, detail? }] }
+//   synthesize({ text, voice? }) -> { audio_base64 }
+//   voices({})                   -> { voices: [{ id, name, detail? }] }
+//   current_voice({})            -> { voice, setting }
+//
+// `current_voice` is what lets the hub offer a choice: it says which voice is
+// configured right now (so a picker can mark it) and which settings key holds
+// that choice (so choosing another writes to the key this server reads). Both
+// are this package's own facts; the hub does not know its key names.
 //
 // Audio is the one payload that cannot travel as text, so it is base64 in the
 // JSON body. The bytes are MPEG — which is what the compiled package returned
@@ -103,6 +109,15 @@ async function synthesize({ text, voice }) {
   return { audio_base64: bytes.toString("base64") };
 }
 
+/** The configured voice and the key that holds it. Pure; drives the test. */
+export function currentVoice(env) {
+  const voice = env?.[VOICE] ?? "";
+  // `voice` is "" rather than absent when nothing is configured: the hub reads
+  // an empty id as "none chosen", which is the honest state — a server that
+  // omitted the field would read as not supporting the question at all.
+  return { voice: typeof voice === "string" ? voice : "", setting: VOICE };
+}
+
 async function voices() {
   const apiKey = credentials();
   const response = await fetch(`${BASE_URL}/voices`, {
@@ -118,7 +133,7 @@ async function voices() {
 }
 
 const server = new Server(
-  { name: "leo-elevenlabs-mcp", version: "1.0.0" },
+  { name: "leo-elevenlabs-mcp", version: "1.1.0" },
   { capabilities: { tools: {} } },
 );
 
@@ -145,6 +160,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description: "Every ElevenLabs voice this account can speak with.",
       inputSchema: { type: "object", properties: {} },
     },
+    {
+      name: "current_voice",
+      description:
+        "The voice id configured right now, and the settings key that holds it.",
+      inputSchema: { type: "object", properties: {} },
+    },
   ],
 }));
 
@@ -156,6 +177,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
     if (name === "voices") {
       return { content: [{ type: "text", text: JSON.stringify(await voices()) }] };
+    }
+    if (name === "current_voice") {
+      return { content: [{ type: "text", text: JSON.stringify(currentVoice(process.env)) }] };
     }
     return { isError: true, content: [{ type: "text", text: `Unknown tool: ${name}` }] };
   } catch (error) {

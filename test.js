@@ -1,5 +1,5 @@
 process.env.LEO_MCP_NO_SERVE = "1";
-const { toVoices } = await import("./index.js");
+const { toVoices, currentVoice } = await import("./index.js");
 const assert = await import("node:assert/strict");
 
 const mapped = toVoices({
@@ -21,4 +21,10 @@ assert.equal("detail" in mapped[1], false);
 for (const junk of [{}, { voices: null }, { voices: "nope" }, null, undefined]) {
   assert.deepEqual(toVoices(junk), []);
 }
+// The hub marks the current voice and writes a new choice to the key named
+// here — so the key must be the one `synthesize` reads, and an unset voice
+// must be "" rather than missing.
+assert.deepEqual(currentVoice({ elevenlabs_voice_id: "r1" }), { voice: "r1", setting: "elevenlabs_voice_id" });
+assert.deepEqual(currentVoice({}), { voice: "", setting: "elevenlabs_voice_id" });
+assert.deepEqual(currentVoice(undefined), { voice: "", setting: "elevenlabs_voice_id" });
 console.log("ok — elevenlabs voice mapping holds");
