@@ -12,7 +12,7 @@
     "command": "npx",
     "args": [
       "-y",
-      "https://github.com/TheBananaStand/leo-elevenlabs-mcp/archive/12e7481b63e2b1ffad61bb75be1d63ff8039594a.tar.gz"
+      "https://github.com/TheBananaStand/leo-elevenlabs-mcp/archive/fdb695fc5b1490602e5892191f6252b32fe8310b.tar.gz"
     ]
   },
   "descriptor": {
